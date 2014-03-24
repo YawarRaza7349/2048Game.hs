@@ -1,7 +1,6 @@
 import Data.List
 import Data.Maybe
 import Data.Ratio
-import System.IO
 import System.Random
 
 data Direction = DirUp | DirDown | DirLeft | DirRight deriving (Eq)
