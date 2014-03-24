@@ -1,6 +1,7 @@
 import Data.List
 import Data.Maybe
 import Data.Ratio
+import System.IO
 import System.Random
 
 data Direction = DirUp | DirDown | DirLeft | DirRight deriving (Eq)
@@ -68,10 +69,9 @@ pureGame gn ds = map head $ group $ e ++ (take 1 f) where (e, f) = span movableB
 showBoard :: Board -> String
 showBoard b = intercalate "\n" $ map (intercalate " ") $ transpose $ map (\c -> map (reverse . take (maximum (map length c)) . (++(repeat ' ')) . reverse) c) ns where ns = transpose $ map (map (\x -> case x of Just y -> show y; Nothing -> "_")) b
 
-readDirection :: String -> Maybe Direction
-readDirection s | s == "" = Nothing
-                | (c:cs) <- s = lookup c ((zip ['L', 'l'] $ repeat DirLeft) ++ (zip ['R', 'r'] $ repeat DirRight) ++ (zip ['U', 'u'] $ repeat DirUp) ++ (zip ['D', 'd'] $ repeat DirDown))
+readDirection :: Char -> Maybe Direction
+readDirection = flip lookup [('a', DirLeft), ('d', DirRight), ('w', DirUp), ('s', DirDown)]
 
 main :: IO ()
 main = do myGen <- getStdGen
-          interact $ concat . map ('\n':) . map (++"\n") . map showBoard . pureGame myGen . mapMaybe readDirection . lines
+          interact $ concat . map ('\n':) . map (++"\n") . map showBoard . pureGame myGen . mapMaybe readDirection
